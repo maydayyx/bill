@@ -4,6 +4,10 @@ import router from "@/router/index.jsx";
 import {RouterProvider} from 'react-router-dom'
 import '@/index.css'
 import '@/theme.css'
+import {Provider} from "react-redux";
+import store from "@/store/index.js";
 ReactDOM.createRoot(document.getElementById('root')).render(
-   <RouterProvider router={router} />
+   <Provider store={store}>
+       <RouterProvider router={router} />
+   </Provider>
 )
