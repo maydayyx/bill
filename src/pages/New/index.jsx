@@ -5,11 +5,32 @@ import classNames from 'classnames'
 import { billListData } from '@/contants'
 import { useNavigate } from 'react-router-dom'
 import {useState} from "react";
+import {addBillList} from "@/store/modules/billStore.js";
+import {useDispatch} from "react-redux";
 
 const New = () => {
     const navigate = useNavigate()
     // 控制收入支出的状态 pay 支出 income 收入
     const [billType,setBillType] = useState('pay')
+    // 收集金额
+    const [money,setMoney] = useState(0)
+    const moneyChane = (value) => {
+        setMoney(value)
+    }
+    const dispatch = useDispatch()
+    // 收集账单类型
+    const [useFor,setUseFor] = useState('')
+    // 保存账单
+    const saveBill = () => {
+    //     收集表单数据
+        const data = {
+            type:billType,
+            money:billType==='pay'? -money : +money,
+            date: new Date(),
+            useFor:useFor
+        }
+        dispatch(addBillList(data))
+    }
     return (
         <div className="keepAccounts">
             <NavBar className="nav" onBack={() => navigate(-1)}>
@@ -50,6 +71,8 @@ const New = () => {
                                 className="input"
                                 placeholder="0.00"
                                 type="number"
+                                value={money}
+                                onChange={moneyChane}
                             />
                             <span className="iconYuan">¥</span>
                         </div>
@@ -71,7 +94,7 @@ const New = () => {
                                                 ''
                                             )}
                                             key={item.type}
-
+                                            onClick={()=>setUseFor(item.type)}
                                         >
                                             <div className="icon">
                                                 <Icon type={item.type} />
@@ -87,7 +110,7 @@ const New = () => {
             </div>
 
             <div className="btns">
-                <Button className="btn save">
+                <Button className="btn save" onClick={()=>saveBill()}>
                     保 存
                 </Button>
             </div>
